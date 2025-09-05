@@ -25,7 +25,7 @@ const syncUserCreation = inngest.createFunction(
             profile_picture: image_url,
             username
         }
-        await User.create(userData)
+        await User.findByIdAndUpdate(id, userData, { upsert: true, new: true })
     }
 )
 
