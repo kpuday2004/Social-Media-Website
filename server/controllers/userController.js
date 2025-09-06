@@ -13,7 +13,7 @@ export const getUserData = async (req, res) => {
         if(!user){
             return res.json({success: false, message: 'User not found'})
         }
-        res.json({success: true, message: user})
+        res.json({success: true, user})
     } catch (error) {
         console.log(error);
         res.json({success: false, message: error.message})
@@ -129,7 +129,7 @@ export const followUser = async (req, res) => {
             return res.json({success: false, message: 'You are already following this user'})
         }
         user.following.push(id);
-        await User.save()
+        await user.save()
 
         const toUser = await User.findById(id)
         toUser.followers.push(id);
@@ -214,7 +214,7 @@ export const sendConnectionRequest = async (req, res) => {
 export const getUserConnections = async (req, res) => {
     try {
         const {userId} = req.auth()
-        const user = await User.findById(userId).populate('connections, followers following')
+        const user = await User.findById(userId).populate('connections followers following')
 
         const connections = user.connections
         const followers = user.followers

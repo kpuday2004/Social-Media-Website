@@ -13,8 +13,8 @@ userRouter.post('/follow', protect, followUser)
 userRouter.post('/unfollow', protect, unfollowUser)
 userRouter.post('/connect', protect, sendConnectionRequest)
 userRouter.post('/accept', protect, acceptConnectionRequest)
-userRouter.get('connections', protect, getUserConnections)
-userRouter.post('profiles', protect, getUserProfiles)
+userRouter.get('/connections', protect, getUserConnections)
+userRouter.post('/profiles', protect, getUserProfiles)
 userRouter.get('/recent-messages', protect, getUserRecentMessages)
 
 export default userRouter
