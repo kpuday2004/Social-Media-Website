@@ -12,7 +12,7 @@ const Connections = () => {
   const navigate = useNavigate()
   const {getToken} = useAuth()
   const dispatch = useDispatch()
-  const {connections, pendingConnections, followers, following} = useSelector((state) => state.connections)
+  const {connections = [], pendingConnections = [], followers = [], following = []} = useSelector((state) => state.connections)
 
   const dataArray = [
     {label: 'Followers', value: followers, icon: Users},
@@ -72,7 +72,7 @@ const Connections = () => {
         <div className='mb-8 flex flex-wrap gap-6'>
           {dataArray.map((item, index) =>(
             <div key={index} className='flex flex-col items-center justify-center gap-1 border h-20 w-40 border-gray-200 bg-white shadow rounded-md'>
-              <b>{item.value.length}</b>
+              <b>{item.value.length || 0}</b>
               <p className='text-slate-600'>{item.label}</p>
             </div>
           ))}
@@ -94,7 +94,7 @@ const Connections = () => {
         {/* Connections */}
         <div className='flex flex-wrap gap-6 mt-6'>
           {
-            dataArray.find((item) => item.label === currentTab).value.map((user) => (
+            dataArray.find((item) => item.label === currentTab)?.value?.map((user) => (
               <div key={user._id} className='w-full max-w-88 flex gap-5 p-6 bg-white shadow rounded-md'>
                 <img src={user.profile_picture} className='rounded-full w-12 h-12 shadow-md mx-auto' alt=""/>
                 <div className='flex-1'>

@@ -1,7 +1,6 @@
 import { BadgeCheck, Heart, MessageCircle, Share2 } from 'lucide-react'
 import moment from 'moment'
 import React, { useState } from 'react'
-import { dummyUserData } from '../assets/assets'
 import { useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { useAuth } from '@clerk/clerk-react'
@@ -66,14 +65,14 @@ const PostCard = ({post}) => {
                 <Heart onClick={handleLike} className={`w-4 h-4 cursor-pointer ${likes.includes(currentUser._id) && 'text-red-500 fill-red-500'}`}/>
                 <span>{likes.length}</span>
             </div>
-            <div className='flex items-center gap-1'>
+            {/* <div className='flex items-center gap-1'>
                 <MessageCircle onClick={handleLike} className='w-4 h-4 cursor-pointer'/>
                 <span>{12}</span>
             </div>
             <div className='flex items-center gap-1'>
                 <Share2 onClick={handleLike} className='w-4 h-4 cursor-pointer'/>
                 <span>{7}</span>
-            </div>
+            </div> */}
         </div>
     </div>
   )

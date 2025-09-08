@@ -132,7 +132,7 @@ export const followUser = async (req, res) => {
         await user.save()
 
         const toUser = await User.findById(id)
-        toUser.followers.push(id);
+        toUser.followers.push(userId);
         await toUser.save()
 
         res.json({success: true, message: 'Now you are following this user'})
@@ -213,16 +213,23 @@ export const sendConnectionRequest = async (req, res) => {
 // Get User Connections
 export const getUserConnections = async (req, res) => {
     try {
-        const {userId} = req.auth()
-        const user = await User.findById(userId).populate('connections followers following')
+        const { userId } = req.auth()
+        const user = await User.findById(userId)
 
-        const connections = user.connections
-        const followers = user.followers
-        const following = user.following
+        if (!user) {
+        return res.json({ success: false, message: "User not found" })
+        }
 
-        const pendingConnections = (await Connection.find({to_user_id: userId, status: 'pending'}).populate('from_user_id')).map(connection => connection.from_user_id)
+        // Manually fetch full user objects
+        const connections = await User.find({ _id: { $in: user.connections, $ne: userId } })
+        const followers = await User.find({ _id: { $in: user.followers, $ne: userId } })
+        const following = await User.find({ _id: { $in: user.following, $ne: userId } })
 
-        res.json({success: true, connections, followers, following, pendingConnections})
+        const pendingConnections = (
+        await Connection.find({ to_user_id: userId, status: "pending" }).populate("from_user_id")
+        ).map((connection) => connection.from_user_id)
+
+        res.json({ success: true, connections, followers, following, pendingConnections })
     } catch (error) {
         console.log(error);
         res.json({success: false, message: error.message})

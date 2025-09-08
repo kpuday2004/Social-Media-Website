@@ -57,6 +57,34 @@ const syncUserDeletion = inngest.createFunction(
         const {id} = event.data
         
         await User.findByIdAndDelete(id)
+
+        // 2. Remove from followers / following / connections of other users
+        await User.updateMany(
+        {},
+        {
+            $pull: {
+            followers: id,
+            following: id,
+            connections: id,
+            },
+        }
+        );
+
+        // 3. Delete user’s stories
+        await Story.deleteMany({ user: id });
+
+        // 4. Delete user’s posts
+        await Post.deleteMany({ user: id });
+
+        // 5. Delete messages where user was sender or receiver
+        await Message.deleteMany({
+        $or: [{ from_user_id: id }, { to_user_id: id }],
+        });
+
+        // 6. Delete connections where user was part of request
+        await Connection.deleteMany({
+        $or: [{ from_user_id: id }, { to_user_id: id }],
+        });
     }
 )
 
